@@ -17,7 +17,6 @@ load_dotenv('.env')
 
 client_id = os.environ.get('SPOTIFY_CLIENT_ID')
 client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
-username = 'rqfju899d4ie81memjx0fgy70'
 
 # Authenticate application and get access token:
 client_auth_response = requests.post(
@@ -26,13 +25,19 @@ client_auth_response = requests.post(
     data={'grant_type': 'client_credentials'})
 
 if not client_auth_response.ok:
-    raise RuntimeError(f'There was a problem retrieving application credentials from spotify: \n\t{client_auth_response.content}')
+    raise RuntimeError(f'There was a problem retrieving application credentials from Spotify: \n\t{client_auth_response.content}')
 
 access_token = client_auth_response.json()['access_token']
 
-# Get artist information for the band Knower:
-artist_info = requests.get(
-    url='https://api.spotify.com/v1/artists/7fVp0A6oCMfiQJihMnY0SZ', 
+# Get albums by the band Knower:
+artist_albums_info = requests.get(
+    url='https://api.spotify.com/v1/artists/7fVp0A6oCMfiQJihMnY0SZ/albums', 
     auth=BearerAuth(access_token)).json()
 
-print(artist_info)
+album_ids = [item['id'] for item in artist_albums_info['items']]
+
+albums = requests.get(
+    url=f'https://api.spotify.com/v1/albums?ids={",".join(album_ids)}', 
+    auth=BearerAuth(access_token)).json()
+
+print(albums)
