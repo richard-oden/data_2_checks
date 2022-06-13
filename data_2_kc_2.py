@@ -1,4 +1,3 @@
-from distutils.command.clean import clean
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import os
