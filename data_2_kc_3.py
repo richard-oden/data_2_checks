@@ -49,6 +49,6 @@ melted_df = merged_df.melt(id_vars=ColumnName.COUNTRY.value, value_name='USD ($)
 
 # Create and display grouped bar chart:
 sns.set_style('darkgrid')
-sns.barplot(x=ColumnName.COUNTRY.value, y='USD ($)', hue='Income', data=melted_df,)
+sns.barplot(x=ColumnName.COUNTRY.value, y='USD ($)', hue='Income', data=melted_df).set(title='Average Developer Income vs. Per Capita Income By Country')
 plt.xticks(rotation=90)
 plt.show()
