@@ -1,6 +1,9 @@
 import enum
+import matplotlib.pyplot as plt
 import os
+from numpy import spacing
 import pandas as pd
+import seaborn as sns
 
 # I'm using an enum to store column names.
 class ColumnName(enum.Enum):
@@ -36,7 +39,17 @@ so_df.dropna(inplace=True)
 # Group by country and get average income:
 so_df = so_df.groupby(ColumnName.COUNTRY.value, as_index=False)[ColumnName.DEVELOPER_INCOME.value].mean()
 
-# Merge dataframes
+# Merge dataframes:
 merged_df = wb_df.merge(so_df, on=ColumnName.COUNTRY.value)
 
-print(merged_df)
+# Sort by developer income:
+merged_df.sort_values(by=ColumnName.DEVELOPER_INCOME.value, inplace=True)
+
+# Melt dataframe:
+melted_df = merged_df.melt(id_vars=ColumnName.COUNTRY.value, value_name='USD ($)', var_name='Income')
+
+# Create and display grouped bar chart:
+sns.set_style('darkgrid')
+sns.barplot(x=ColumnName.COUNTRY.value, y='USD ($)', hue='Income', data=melted_df,)
+plt.xticks(rotation=90)
+plt.show()
